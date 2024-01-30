@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tic Tac Toe</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <h1>Tic Tac Toe</h1>
+
+        <div class="container">
+            <p id="currentPlayer">Player X's turn</p>
+            <table id="board">
+                <tr>
+                    <td onclick="cellClicked(this)"></td>
+                    <td onclick="cellClicked(this)"></td>
+                    <td onclick="cellClicked(this)"></td>
+                </tr>
+                <tr>
+                    <td onclick="cellClicked(this)"></td>
+                    <td onclick="cellClicked(this)"></td>
+                    <td onclick="cellClicked(this)"></td>
+                </tr>
+                <tr>
+                    <td onclick="cellClicked(this)"></td>
+                    <td onclick="cellClicked(this)"></td>
+                    <td onclick="cellClicked(this)"></td>
+                </tr>
+            </table>
+        </div>
+
+        <script>
+            let currentPlayer = 'X';
+            let gameBoard = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', '']
+            ];
+
+            function updateCurrentPlayerText() {
+                document.getElementById('currentPlayer').textContent = `Player ${currentPlayer}'s turn`;
+            }
+
+            function cellClicked(cell) {
+                const rowIndex = cell.parentElement.rowIndex;
+                const cellIndex = cell.cellIndex;
+
+                if (gameBoard[rowIndex][cellIndex] === '') {
+                    cell.textContent = currentPlayer;
+                    gameBoard[rowIndex][cellIndex] = currentPlayer;
+
+                    if (checkWinner()) {
+                        alert(`Player ${currentPlayer} wins!`);
+                        resetGame();
+                    } else if (checkTie()) {
+                        alert('It\'s a tie!');
+                        resetGame();
+                    } else {
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                        updateCurrentPlayerText();
+                    }
+                } else {
+                    alert('Cell already taken. Choose another cell.');
+                }
+            }
+
+            function checkWinner() {
+                // Check rows
+                for (let i = 0; i < 3; i++) {
+                    if (
+                        gameBoard[i][0] !== '' &&
+                        gameBoard[i][0] === gameBoard[i][1] &&
+                        gameBoard[i][1] === gameBoard[i][2]
+                    ) {
+                        return true;
+                    }
+                }
+
+                // Check columns
+                for (let j = 0; j < 3; j++) {
+                    if (
+                        gameBoard[0][j] !== '' &&
+                        gameBoard[0][j] === gameBoard[1][j] &&
+                        gameBoard[1][j] === gameBoard[2][j]
+                    ) {
+                        return true;
+                    }
+                }
+
+                // Check diagonals
+                if (
+                    gameBoard[0][0] !== '' &&
+                    gameBoard[0][0] === gameBoard[1][1] &&
+                    gameBoard[1][1] === gameBoard[2][2]
+                ) {
+                    return true;
+                }
+
+                if (
+                    gameBoard[0][2] !== '' &&
+                    gameBoard[0][2] === gameBoard[1][1] &&
+                    gameBoard[1][1] === gameBoard[2][0]
+                ) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            function checkTie() {
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        if (gameBoard[i][j] === '') {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            function resetGame() {
+                currentPlayer = 'X';
+                gameBoard = [
+                    ['', '', ''],
+                    ['', '', ''],
+                    ['', '', '']
+                ];
+
+                const cells = document.querySelectorAll('#board td');
+                cells.forEach(cell => cell.textContent = '');
+
+                updateCurrentPlayerText();
+
+                alert('Game reset. Start a new game!');
+            }
+
+            updateCurrentPlayerText(); // Initial setup
+        </script>
+
+    </body>
+
+</html>
